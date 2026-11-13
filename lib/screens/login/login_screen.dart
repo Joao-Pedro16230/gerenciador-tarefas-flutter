@@ -6,6 +6,7 @@ import '../../core/routes/app_routes.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
+import '../../core/utils/app_validators.dart';
 import '../../services/auth_service.dart';
 import '../../widgets/app_text_field.dart';
 
@@ -55,26 +56,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  String? _validateEmail(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return AppStrings.emailRequired;
-    }
-
-    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+$').hasMatch(value.trim())) {
-      return AppStrings.emailInvalid;
-    }
-
-    return null;
-  }
-
-  String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return AppStrings.passwordRequired;
-    }
-
-    return null;
-  }
-
   @override
   void dispose() {
     _emailController.dispose();
@@ -111,14 +92,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     AppTextField(
                       label: AppStrings.email,
                       controller: _emailController,
-                      validator: _validateEmail,
+                      validator: AppValidators.validateEmail,
                     ),
                     SizedBox(height: AppSpacing.md),
                     AppTextField(
                       label: AppStrings.password,
                       obscureText: true,
                       controller: _passwordController,
-                      validator: _validatePassword,
+                      validator: AppValidators.validatePassword,
                     ),
                     SizedBox(height: AppSpacing.lg),
                     SizedBox(

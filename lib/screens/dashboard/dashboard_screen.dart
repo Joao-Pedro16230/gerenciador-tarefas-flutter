@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/constants/app_strings.dart';
 import '../../core/routes/app_routes.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
@@ -71,7 +72,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   if (snapshot.hasError) {
                     return Center(
                       child: Text(
-                        'Erro ao carregar tarefas: ${snapshot.error}',
+                        '${AppStrings.tasksLoadError}: ${snapshot.error}',
                         textAlign: TextAlign.center,
                       ),
                     );
@@ -90,19 +91,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text('Olá, usuário', style: AppTextStyles.dashboardTitle),
-                      const SizedBox(height: AppSpacing.sm),
                       Text(
-                        'Organize suas tarefas e acompanhe seu progresso',
+                        AppStrings.dashboardGreeting,
+                        style: AppTextStyles.dashboardTitle,
+                      ),
+
+                      const SizedBox(height: AppSpacing.sm),
+
+                      Text(
+                        AppStrings.dashboardSubtitle,
                         style: AppTextStyles.dashboardSubtitle,
                       ),
+
                       const SizedBox(height: AppSpacing.xxl),
-                      _buildCounterCard('Total de tarefas', total),
+
+                      _buildCounterCard(AppStrings.totalTasks, total),
+
                       const SizedBox(height: AppSpacing.md),
-                      _buildCounterCard('Tarefas pendentes', pending),
+
+                      _buildCounterCard(AppStrings.pendingTasks, pending),
+
                       const SizedBox(height: AppSpacing.md),
-                      _buildCounterCard('Tarefas concluídas', completed),
+
+                      _buildCounterCard(AppStrings.completedTasks, completed),
+
                       const SizedBox(height: AppSpacing.xl),
+
                       SizedBox(
                         height: AppSpacing.xxl,
                         child: ElevatedButton(
@@ -122,7 +136,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             ),
                           ),
                           child: Text(
-                            'VER MINHAS TAREFAS',
+                            AppStrings.viewMyTasks,
                             style: AppTextStyles.buttonText,
                           ),
                         ),

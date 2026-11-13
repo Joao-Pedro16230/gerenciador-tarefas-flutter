@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../core/constants/app_strings.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
+import '../../core/utils/app_validators.dart';
 import '../../models/category.dart';
 import '../../models/tag.dart';
 import '../../models/task.dart';
@@ -89,7 +91,6 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
 
     try {
       final taskService = TaskService(token: widget.token);
-
       final selectedTags = await _tagsFuture;
 
       if (!mounted) return;
@@ -118,7 +119,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao atualizar tarefa: $error')),
+        SnackBar(content: Text('${AppStrings.updateTaskError}: $error')),
       );
     } finally {
       if (mounted) {
@@ -164,7 +165,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return const Text(
-            'Erro ao carregar categorias',
+            AppStrings.categoriesLoadError,
             style: TextStyle(color: Colors.red),
           );
         }
@@ -178,8 +179,8 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
         return DropdownButtonFormField<int>(
           initialValue: _selectedCategoryId,
           dropdownColor: AppColors.inputBackground,
-          decoration: _inputDecoration('Categoria'),
-          hint: const Text('Selecione uma categoria'),
+          decoration: _inputDecoration(AppStrings.category),
+          hint: const Text(AppStrings.selectCategory),
           items: categories.map((category) {
             return DropdownMenuItem<int>(
               value: category.id,
@@ -202,7 +203,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return const Text(
-            'Erro ao carregar etiquetas',
+            AppStrings.tagsLoadError,
             style: TextStyle(color: Colors.red),
           );
         }
@@ -215,7 +216,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
 
         if (tags.isEmpty) {
           return const Text(
-            'Nenhuma etiqueta cadastrada.',
+            AppStrings.noTags,
             style: TextStyle(color: AppColors.textSecondary),
           );
         }
@@ -260,64 +261,73 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text(
-                      'Editar tarefa',
+                      AppStrings.editTaskTitle,
                       style: TextStyle(
                         fontSize: 26,
                         fontWeight: FontWeight.bold,
                         color: AppColors.textPrimary,
                       ),
                     ),
+
                     const SizedBox(height: AppSpacing.sm),
+
                     const Text(
-                      'Altere as informações de sua tarefa',
+                      AppStrings.editTaskSubtitle,
                       style: TextStyle(
                         fontSize: 14,
                         color: AppColors.textSecondary,
                       ),
                     ),
+
                     const SizedBox(height: AppSpacing.xxl),
+
                     const Text(
-                      'Título da tarefa',
+                      AppStrings.taskTitle,
                       style: TextStyle(color: AppColors.textPrimary),
                     ),
+
                     const SizedBox(height: AppSpacing.sm),
+
                     TextFormField(
                       controller: _titleController,
-                      decoration: _inputDecoration('Título da tarefa'),
-                      validator: (value) {
-                        if (value == null || value.trim().length < 2) {
-                          return 'Informe um título com pelo menos 2 caracteres';
-                        }
-                        return null;
-                      },
+                      decoration: _inputDecoration(AppStrings.taskTitle),
+                      validator: AppValidators.validateTaskTitle,
                     ),
+
                     const SizedBox(height: AppSpacing.md),
+
                     const Text(
-                      'Descrição da tarefa',
+                      AppStrings.taskDescription,
                       style: TextStyle(color: AppColors.textPrimary),
                     ),
+
                     const SizedBox(height: AppSpacing.sm),
+
                     TextFormField(
                       controller: _descriptionController,
-                      decoration: _inputDecoration('Descrição da tarefa'),
+                      decoration: _inputDecoration(AppStrings.taskDescription),
                       maxLines: 3,
                     ),
+
                     const SizedBox(height: AppSpacing.md),
+
                     const Text(
-                      'Data de vencimento',
+                      AppStrings.dueDate,
                       style: TextStyle(color: AppColors.textPrimary),
                     ),
+
                     const SizedBox(height: AppSpacing.sm),
+
                     InkWell(
                       onTap: _selectDate,
                       borderRadius: BorderRadius.circular(
                         AppSpacing.inputRadius,
                       ),
                       child: InputDecorator(
-                        decoration: _inputDecoration('Data de vencimento'),
+                        decoration: _inputDecoration(AppStrings.dueDate),
                         child: Text(
                           _dueDate == null
-                              ? 'Selecionar data'
+                              ? AppStrings.selectDate
                               : _formatDate(_dueDate!),
                           style: TextStyle(
                             color: _dueDate == null
@@ -327,25 +337,35 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                         ),
                       ),
                     ),
+
                     const SizedBox(height: AppSpacing.md),
+
                     const Text(
-                      'Categoria',
+                      AppStrings.category,
                       style: TextStyle(color: AppColors.textPrimary),
                     ),
+
                     const SizedBox(height: AppSpacing.sm),
+
                     _buildCategoryField(),
+
                     const SizedBox(height: AppSpacing.md),
+
                     const Text(
-                      'Etiquetas',
+                      AppStrings.tags,
                       style: TextStyle(color: AppColors.textPrimary),
                     ),
+
                     const SizedBox(height: AppSpacing.sm),
+
                     _buildTagsField(),
+
                     const SizedBox(height: AppSpacing.lg),
+
                     SwitchListTile(
                       contentPadding: EdgeInsets.zero,
                       title: const Text(
-                        'Tarefa concluída',
+                        AppStrings.completedTask,
                         style: TextStyle(color: AppColors.textPrimary),
                       ),
                       activeThumbColor: AppColors.primary,
@@ -356,7 +376,9 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                         });
                       },
                     ),
+
                     const SizedBox(height: AppSpacing.xl),
+
                     SizedBox(
                       height: AppSpacing.xxl,
                       child: ElevatedButton(
@@ -373,7 +395,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                         child: _isSaving
                             ? const CircularProgressIndicator()
                             : const Text(
-                                'SALVAR ALTERAÇÕES',
+                                AppStrings.saveChanges,
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,

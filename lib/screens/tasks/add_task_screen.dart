@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../core/constants/app_strings.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
+import '../../core/utils/app_validators.dart';
 import '../../models/category.dart';
 import '../../models/tag.dart';
 import '../../services/category_service.dart';
@@ -36,6 +38,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     super.initState();
 
     _categoriesFuture = CategoryService(token: widget.token).getCategories();
+
     _tagsFuture = TagService(token: widget.token).getTags();
   }
 
@@ -87,9 +90,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     } catch (error) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Erro ao salvar tarefa: $error')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${AppStrings.saveTaskError}: $error')),
+      );
     } finally {
       if (mounted) {
         setState(() {
@@ -134,7 +137,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return const Text(
-            'Erro ao carregar categorias',
+            AppStrings.categoriesLoadError,
             style: TextStyle(color: Colors.red),
           );
         }
@@ -148,8 +151,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         return DropdownButtonFormField<int>(
           initialValue: _selectedCategoryId,
           dropdownColor: AppColors.inputBackground,
-          decoration: _inputDecoration('Categoria'),
-          hint: const Text('Selecione uma categoria'),
+          decoration: _inputDecoration(AppStrings.category),
+          hint: const Text(AppStrings.selectCategory),
           items: categories.map((category) {
             return DropdownMenuItem<int>(
               value: category.id,
@@ -172,7 +175,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return const Text(
-            'Erro ao carregar etiquetas',
+            AppStrings.tagsLoadError,
             style: TextStyle(color: Colors.red),
           );
         }
@@ -185,7 +188,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
         if (tags.isEmpty) {
           return const Text(
-            'Nenhuma etiqueta cadastrada.',
+            AppStrings.noTags,
             style: TextStyle(color: AppColors.textSecondary),
           );
         }
@@ -230,39 +233,37 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text(
-                      'Adicionar tarefa',
+                      AppStrings.addTaskTitle,
                       style: TextStyle(
                         fontSize: 26,
                         fontWeight: FontWeight.bold,
                         color: AppColors.textPrimary,
                       ),
                     ),
+
                     const SizedBox(height: AppSpacing.sm),
+
                     const Text(
-                      'Preencha os dados de sua nova tarefa',
+                      AppStrings.addTaskSubtitle,
                       style: TextStyle(
                         fontSize: 14,
                         color: AppColors.textSecondary,
                       ),
                     ),
+
                     const SizedBox(height: AppSpacing.xxl),
 
                     TextFormField(
                       controller: _titleController,
-                      decoration: _inputDecoration('Título da tarefa'),
-                      validator: (value) {
-                        if (value == null || value.trim().length < 2) {
-                          return 'Informe um título com pelo menos 2 caracteres';
-                        }
-                        return null;
-                      },
+                      decoration: _inputDecoration(AppStrings.taskTitle),
+                      validator: AppValidators.validateTaskTitle,
                     ),
 
                     const SizedBox(height: AppSpacing.md),
 
                     TextFormField(
                       controller: _descriptionController,
-                      decoration: _inputDecoration('Descrição da tarefa'),
+                      decoration: _inputDecoration(AppStrings.taskDescription),
                       maxLines: 3,
                     ),
 
@@ -274,10 +275,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         AppSpacing.inputRadius,
                       ),
                       child: InputDecorator(
-                        decoration: _inputDecoration('Data de vencimento'),
+                        decoration: _inputDecoration(AppStrings.dueDate),
                         child: Text(
                           _dueDate == null
-                              ? 'Data de vencimento'
+                              ? AppStrings.dueDate
                               : _formatDate(_dueDate!),
                           style: TextStyle(
                             color: _dueDate == null
@@ -291,19 +292,23 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     const SizedBox(height: AppSpacing.md),
 
                     const Text(
-                      'Categoria',
+                      AppStrings.category,
                       style: TextStyle(color: AppColors.textPrimary),
                     ),
+
                     const SizedBox(height: AppSpacing.sm),
+
                     _buildCategoryField(),
 
                     const SizedBox(height: AppSpacing.md),
 
                     const Text(
-                      'Etiquetas',
+                      AppStrings.tags,
                       style: TextStyle(color: AppColors.textPrimary),
                     ),
+
                     const SizedBox(height: AppSpacing.sm),
+
                     _buildTagsField(),
 
                     const SizedBox(height: AppSpacing.xl),
@@ -324,7 +329,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         child: _isSaving
                             ? const CircularProgressIndicator()
                             : const Text(
-                                'SALVAR TAREFA',
+                                AppStrings.saveTask,
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,

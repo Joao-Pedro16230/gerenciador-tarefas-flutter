@@ -10,15 +10,15 @@ import 'screens/tasks/edit_task_screen.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
-    initialLocation: '/login',
+    initialLocation: AppRoutes.loginPath,
     routes: [
       GoRoute(
-        path: '/login',
+        path: AppRoutes.loginPath,
         name: AppRoutes.login,
         builder: (context, state) => const LoginScreen(),
       ),
       GoRoute(
-        path: '/dashboard',
+        path: AppRoutes.dashboardPath,
         name: AppRoutes.dashboard,
         builder: (context, state) {
           final token = state.extra as String?;
@@ -31,7 +31,7 @@ class AppRouter {
         },
       ),
       GoRoute(
-        path: '/tasks',
+        path: AppRoutes.tasksPath,
         name: AppRoutes.tasks,
         builder: (context, state) {
           final token = state.extra as String?;
@@ -44,7 +44,7 @@ class AppRouter {
         },
       ),
       GoRoute(
-        path: '/tasks/add',
+        path: AppRoutes.addTaskPath,
         name: AppRoutes.addTask,
         builder: (context, state) {
           final token = state.extra as String?;
@@ -57,7 +57,7 @@ class AppRouter {
         },
       ),
       GoRoute(
-        path: '/tasks/edit',
+        path: AppRoutes.editTaskPath,
         name: AppRoutes.editTask,
         builder: (context, state) {
           final data = state.extra;

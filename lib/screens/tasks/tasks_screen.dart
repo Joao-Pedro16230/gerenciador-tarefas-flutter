@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/constants/app_strings.dart';
 import '../../core/routes/app_routes.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
@@ -65,20 +66,20 @@ class _TasksScreenState extends State<TasksScreen> {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: const Text('Excluir tarefa'),
-          content: Text('Deseja realmente excluir a tarefa "${task.title}"?'),
+          title: const Text(AppStrings.deleteTaskTitle),
+          content: Text('${AppStrings.deleteTaskQuestion} "${task.title}"?'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop(false);
               },
-              child: const Text('Cancelar'),
+              child: const Text(AppStrings.cancel),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop(true);
               },
-              child: const Text('Excluir'),
+              child: const Text(AppStrings.delete),
             ),
           ],
         );
@@ -94,15 +95,15 @@ class _TasksScreenState extends State<TasksScreen> {
 
       _refreshTasks();
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Tarefa excluída com sucesso!')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text(AppStrings.taskDeleted)));
     } catch (error) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Erro ao excluir tarefa: $error')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${AppStrings.deleteTaskError}: $error')),
+      );
     }
   }
 
@@ -162,7 +163,7 @@ class _TasksScreenState extends State<TasksScreen> {
           Text(
             task.description?.isNotEmpty == true
                 ? task.description!
-                : 'Sem descrição',
+                : AppStrings.noDescription,
             style: const TextStyle(
               fontSize: 14,
               color: AppColors.textSecondary,
@@ -172,7 +173,7 @@ class _TasksScreenState extends State<TasksScreen> {
           if (task.category != null) ...[
             const SizedBox(height: AppSpacing.md),
             Text(
-              'Categoria: ${task.category!.name}',
+              '${AppStrings.categoryPrefix}: ${task.category!.name}',
               style: const TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
@@ -202,7 +203,7 @@ class _TasksScreenState extends State<TasksScreen> {
           if (task.dueDate != null) ...[
             const SizedBox(height: AppSpacing.sm),
             Text(
-              'Vencimento: '
+              '${AppStrings.dueDatePrefix}: '
               '${task.dueDate!.day.toString().padLeft(2, '0')}/'
               '${task.dueDate!.month.toString().padLeft(2, '0')}/'
               '${task.dueDate!.year}',
@@ -220,18 +221,20 @@ class _TasksScreenState extends State<TasksScreen> {
             runSpacing: AppSpacing.sm,
             children: [
               _buildActionButton(
-                label: task.isCompleted ? 'Concluída' : 'Pendente',
+                label: task.isCompleted
+                    ? AppStrings.completed
+                    : AppStrings.pending,
                 color: task.isCompleted
                     ? AppColors.completed
                     : AppColors.pending,
               ),
               _buildActionButton(
-                label: 'Editar',
+                label: AppStrings.edit,
                 color: AppColors.edit,
                 onPressed: () => _openEditTask(task),
               ),
               _buildActionButton(
-                label: 'Excluir',
+                label: AppStrings.delete,
                 color: AppColors.delete,
                 onPressed: () => _deleteTask(task),
               ),
@@ -256,7 +259,7 @@ class _TasksScreenState extends State<TasksScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const Text(
-                    'Minhas Tarefas',
+                    AppStrings.tasksTitle,
                     style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
@@ -267,7 +270,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   const SizedBox(height: AppSpacing.sm),
 
                   const Text(
-                    'Organize e acompanhe suas atividades',
+                    AppStrings.tasksSubtitle,
                     style: TextStyle(
                       fontSize: 14,
                       color: AppColors.textSecondary,
@@ -291,7 +294,7 @@ class _TasksScreenState extends State<TasksScreen> {
                         if (snapshot.hasError) {
                           return Center(
                             child: Text(
-                              'Erro ao carregar tarefas: '
+                              '${AppStrings.tasksLoadError}: '
                               '${snapshot.error}',
                               textAlign: TextAlign.center,
                             ),
@@ -301,9 +304,7 @@ class _TasksScreenState extends State<TasksScreen> {
                         final tasks = snapshot.data ?? [];
 
                         if (tasks.isEmpty) {
-                          return const Center(
-                            child: Text('Nenhuma tarefa cadastrada.'),
-                          );
+                          return const Center(child: Text(AppStrings.noTasks));
                         }
 
                         return ListView.builder(
@@ -332,7 +333,7 @@ class _TasksScreenState extends State<TasksScreen> {
                         ),
                       ),
                       child: const Text(
-                        '+ ADICIONAR TAREFA',
+                        AppStrings.addTaskButton,
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,

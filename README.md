@@ -147,13 +147,21 @@ A análise estática foi concluída sem problemas identificados.
 
 ## Capturas de tela
 
-Adicionar aqui as capturas das cinco telas do aplicativo:
 
-1. Login
-2. Dashboard
-3. Minhas Tarefas
-4. Adicionar Tarefa
-5. Editar Tarefa
+### Login
+![Tela de Login](screenshots/login.png)
+
+### Dashboard
+![Tela Dashboard](screenshots/dashboard.png)
+
+### Minhas Tarefas
+![Tela Minhas Tarefas](screenshots/tasks.png)
+
+### Adicionar Tarefa
+![Tela Adicionar Tarefa](screenshots/add_task.png)
+
+### Editar Tarefa
+![Tela Editar Tarefa](screenshots/edit_task.png)
 
 ## Repositórios
 

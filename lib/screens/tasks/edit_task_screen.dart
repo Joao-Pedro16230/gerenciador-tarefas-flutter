@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
+import '../../models/category.dart';
+import '../../models/tag.dart';
 import '../../models/task.dart';
+import '../../services/category_service.dart';
+import '../../services/tag_service.dart';
 import '../../services/task_service.dart';
 
 class EditTaskScreen extends StatefulWidget {
@@ -21,6 +25,12 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   late final TextEditingController _titleController;
   late final TextEditingController _descriptionController;
 
+  late final Future<List<Category>> _categoriesFuture;
+  late final Future<List<Tag>> _tagsFuture;
+
+  int? _selectedCategoryId;
+  final Set<int> _selectedTagIds = {};
+
   DateTime? _dueDate;
   bool _isCompleted = false;
   bool _isSaving = false;
@@ -37,6 +47,13 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
 
     _dueDate = widget.task.dueDate;
     _isCompleted = widget.task.isCompleted;
+
+    _selectedCategoryId = widget.task.categoryId;
+    _selectedTagIds.addAll(widget.task.tags.map((tag) => tag.id));
+
+    _categoriesFuture = CategoryService(token: widget.token).getCategories();
+
+    _tagsFuture = TagService(token: widget.token).getTags();
   }
 
   String _formatDate(DateTime date) {
@@ -73,6 +90,10 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     try {
       final taskService = TaskService(token: widget.token);
 
+      final selectedTags = await _tagsFuture;
+
+      if (!mounted) return;
+
       final updatedTask = Task(
         id: widget.task.id,
         userId: widget.task.userId,
@@ -80,6 +101,10 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
         description: _descriptionController.text.trim(),
         dueDate: _dueDate,
         isCompleted: _isCompleted,
+        categoryId: _selectedCategoryId,
+        tags: selectedTags
+            .where((tag) => _selectedTagIds.contains(tag.id))
+            .toList(),
         createdAt: widget.task.createdAt,
         updatedAt: widget.task.updatedAt,
       );
@@ -130,6 +155,91 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
         borderRadius: BorderRadius.circular(AppSpacing.inputRadius),
         borderSide: const BorderSide(color: AppColors.primary),
       ),
+    );
+  }
+
+  Widget _buildCategoryField() {
+    return FutureBuilder<List<Category>>(
+      future: _categoriesFuture,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Text(
+            'Erro ao carregar categorias',
+            style: TextStyle(color: Colors.red),
+          );
+        }
+
+        if (!snapshot.hasData) {
+          return const LinearProgressIndicator();
+        }
+
+        final categories = snapshot.data!;
+
+        return DropdownButtonFormField<int>(
+          initialValue: _selectedCategoryId,
+          dropdownColor: AppColors.inputBackground,
+          decoration: _inputDecoration('Categoria'),
+          hint: const Text('Selecione uma categoria'),
+          items: categories.map((category) {
+            return DropdownMenuItem<int>(
+              value: category.id,
+              child: Text(category.name),
+            );
+          }).toList(),
+          onChanged: (value) {
+            setState(() {
+              _selectedCategoryId = value;
+            });
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildTagsField() {
+    return FutureBuilder<List<Tag>>(
+      future: _tagsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Text(
+            'Erro ao carregar etiquetas',
+            style: TextStyle(color: Colors.red),
+          );
+        }
+
+        if (!snapshot.hasData) {
+          return const LinearProgressIndicator();
+        }
+
+        final tags = snapshot.data!;
+
+        if (tags.isEmpty) {
+          return const Text(
+            'Nenhuma etiqueta cadastrada.',
+            style: TextStyle(color: AppColors.textSecondary),
+          );
+        }
+
+        return Wrap(
+          spacing: AppSpacing.sm,
+          runSpacing: AppSpacing.sm,
+          children: tags.map((tag) {
+            return FilterChip(
+              label: Text(tag.name),
+              selected: _selectedTagIds.contains(tag.id),
+              onSelected: (selected) {
+                setState(() {
+                  if (selected) {
+                    _selectedTagIds.add(tag.id);
+                  } else {
+                    _selectedTagIds.remove(tag.id);
+                  }
+                });
+              },
+            );
+          }).toList(),
+        );
+      },
     );
   }
 
@@ -217,6 +327,20 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                         ),
                       ),
                     ),
+                    const SizedBox(height: AppSpacing.md),
+                    const Text(
+                      'Categoria',
+                      style: TextStyle(color: AppColors.textPrimary),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    _buildCategoryField(),
+                    const SizedBox(height: AppSpacing.md),
+                    const Text(
+                      'Etiquetas',
+                      style: TextStyle(color: AppColors.textPrimary),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    _buildTagsField(),
                     const SizedBox(height: AppSpacing.lg),
                     SwitchListTile(
                       contentPadding: EdgeInsets.zero,

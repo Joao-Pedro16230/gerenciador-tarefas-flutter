@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
+import '../../models/category.dart';
+import '../../models/tag.dart';
+import '../../services/category_service.dart';
+import '../../services/tag_service.dart';
 import '../../services/task_service.dart';
 
 class AddTaskScreen extends StatefulWidget {
@@ -18,8 +22,22 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
 
+  late final Future<List<Category>> _categoriesFuture;
+  late final Future<List<Tag>> _tagsFuture;
+
+  int? _selectedCategoryId;
+  final Set<int> _selectedTagIds = {};
+
   DateTime? _dueDate;
   bool _isSaving = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _categoriesFuture = CategoryService(token: widget.token).getCategories();
+    _tagsFuture = TagService(token: widget.token).getTags();
+  }
 
   String _formatDate(DateTime date) {
     final day = date.day.toString().padLeft(2, '0');
@@ -59,6 +77,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         title: _titleController.text.trim(),
         description: _descriptionController.text.trim(),
         dueDate: _dueDate,
+        categoryId: _selectedCategoryId,
+        tagIds: _selectedTagIds.toList(),
       );
 
       if (!mounted) return;
@@ -108,6 +128,91 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     );
   }
 
+  Widget _buildCategoryField() {
+    return FutureBuilder<List<Category>>(
+      future: _categoriesFuture,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Text(
+            'Erro ao carregar categorias',
+            style: TextStyle(color: Colors.red),
+          );
+        }
+
+        if (!snapshot.hasData) {
+          return const LinearProgressIndicator();
+        }
+
+        final categories = snapshot.data!;
+
+        return DropdownButtonFormField<int>(
+          initialValue: _selectedCategoryId,
+          dropdownColor: AppColors.inputBackground,
+          decoration: _inputDecoration('Categoria'),
+          hint: const Text('Selecione uma categoria'),
+          items: categories.map((category) {
+            return DropdownMenuItem<int>(
+              value: category.id,
+              child: Text(category.name),
+            );
+          }).toList(),
+          onChanged: (value) {
+            setState(() {
+              _selectedCategoryId = value;
+            });
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildTagsField() {
+    return FutureBuilder<List<Tag>>(
+      future: _tagsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Text(
+            'Erro ao carregar etiquetas',
+            style: TextStyle(color: Colors.red),
+          );
+        }
+
+        if (!snapshot.hasData) {
+          return const LinearProgressIndicator();
+        }
+
+        final tags = snapshot.data!;
+
+        if (tags.isEmpty) {
+          return const Text(
+            'Nenhuma etiqueta cadastrada.',
+            style: TextStyle(color: AppColors.textSecondary),
+          );
+        }
+
+        return Wrap(
+          spacing: AppSpacing.sm,
+          runSpacing: AppSpacing.sm,
+          children: tags.map((tag) {
+            return FilterChip(
+              label: Text(tag.name),
+              selected: _selectedTagIds.contains(tag.id),
+              onSelected: (selected) {
+                setState(() {
+                  if (selected) {
+                    _selectedTagIds.add(tag.id);
+                  } else {
+                    _selectedTagIds.remove(tag.id);
+                  }
+                });
+              },
+            );
+          }).toList(),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -141,6 +246,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       ),
                     ),
                     const SizedBox(height: AppSpacing.xxl),
+
                     TextFormField(
                       controller: _titleController,
                       decoration: _inputDecoration('Título da tarefa'),
@@ -151,13 +257,17 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         return null;
                       },
                     ),
+
                     const SizedBox(height: AppSpacing.md),
+
                     TextFormField(
                       controller: _descriptionController,
                       decoration: _inputDecoration('Descrição da tarefa'),
                       maxLines: 3,
                     ),
+
                     const SizedBox(height: AppSpacing.md),
+
                     InkWell(
                       onTap: _selectDate,
                       borderRadius: BorderRadius.circular(
@@ -177,7 +287,27 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         ),
                       ),
                     ),
+
+                    const SizedBox(height: AppSpacing.md),
+
+                    const Text(
+                      'Categoria',
+                      style: TextStyle(color: AppColors.textPrimary),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    _buildCategoryField(),
+
+                    const SizedBox(height: AppSpacing.md),
+
+                    const Text(
+                      'Etiquetas',
+                      style: TextStyle(color: AppColors.textPrimary),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    _buildTagsField(),
+
                     const SizedBox(height: AppSpacing.xl),
+
                     SizedBox(
                       height: AppSpacing.xxl,
                       child: ElevatedButton(

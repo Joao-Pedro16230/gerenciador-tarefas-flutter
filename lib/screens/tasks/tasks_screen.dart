@@ -156,7 +156,9 @@ class _TasksScreenState extends State<TasksScreen> {
               color: AppColors.textPrimary,
             ),
           ),
+
           const SizedBox(height: AppSpacing.xs),
+
           Text(
             task.description?.isNotEmpty == true
                 ? task.description!
@@ -166,7 +168,53 @@ class _TasksScreenState extends State<TasksScreen> {
               color: AppColors.textSecondary,
             ),
           ),
+
+          if (task.category != null) ...[
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              'Categoria: ${task.category!.name}',
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
+              ),
+            ),
+          ],
+
+          if (task.tags.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.sm,
+              children: task.tags.map((tag) {
+                return Chip(
+                  label: Text(tag.name),
+                  backgroundColor: AppColors.background,
+                  labelStyle: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontSize: 12,
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
+
+          if (task.dueDate != null) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              'Vencimento: '
+              '${task.dueDate!.day.toString().padLeft(2, '0')}/'
+              '${task.dueDate!.month.toString().padLeft(2, '0')}/'
+              '${task.dueDate!.year}',
+              style: const TextStyle(
+                fontSize: 13,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ],
+
           const SizedBox(height: AppSpacing.md),
+
           Wrap(
             spacing: AppSpacing.sm,
             runSpacing: AppSpacing.sm,
@@ -215,7 +263,9 @@ class _TasksScreenState extends State<TasksScreen> {
                       color: AppColors.textPrimary,
                     ),
                   ),
+
                   const SizedBox(height: AppSpacing.sm),
+
                   const Text(
                     'Organize e acompanhe suas atividades',
                     style: TextStyle(
@@ -223,7 +273,9 @@ class _TasksScreenState extends State<TasksScreen> {
                       color: AppColors.textSecondary,
                     ),
                   ),
+
                   const SizedBox(height: AppSpacing.xl),
+
                   Flexible(
                     fit: FlexFit.loose,
                     child: FutureBuilder<List<Task>>(
@@ -239,7 +291,8 @@ class _TasksScreenState extends State<TasksScreen> {
                         if (snapshot.hasError) {
                           return Center(
                             child: Text(
-                              'Erro ao carregar tarefas: ${snapshot.error}',
+                              'Erro ao carregar tarefas: '
+                              '${snapshot.error}',
                               textAlign: TextAlign.center,
                             ),
                           );
@@ -262,7 +315,9 @@ class _TasksScreenState extends State<TasksScreen> {
                       },
                     ),
                   ),
+
                   const SizedBox(height: AppSpacing.md),
+
                   SizedBox(
                     height: AppSpacing.xxl,
                     child: ElevatedButton(

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 
 import '../core/constants/api_constants.dart';
@@ -19,7 +18,7 @@ class TaskService {
   Uri get _tasksUrl =>
       Uri.parse('${ApiConstants.baseUrl}${ApiConstants.tasks}');
 
-  // Listar tarefas
+  // Buscar todas as tarefas
   Future<List<Task>> getTasks() async {
     final response = await http.get(_tasksUrl, headers: _headers);
 
@@ -33,7 +32,7 @@ class TaskService {
     throw Exception('Erro ao carregar tarefas: ${response.statusCode}');
   }
 
-  // Buscar tarefa por ID
+  // Buscar uma tarefa pelo ID
   Future<Task> getTask(int id) async {
     final response = await http.get(
       Uri.parse('$_tasksUrl/$id'),
@@ -48,12 +47,14 @@ class TaskService {
     throw Exception('Erro ao buscar tarefa: ${response.statusCode}');
   }
 
-  // Cadastrar tarefa
+  // Cadastrar uma tarefa
   Future<Task> createTask({
     required String title,
     String? description,
     DateTime? dueDate,
     bool isCompleted = false,
+    int? categoryId,
+    List<int> tagIds = const [],
   }) async {
     final response = await http.post(
       _tasksUrl,
@@ -63,6 +64,8 @@ class TaskService {
         'description': description,
         'due_date': _formatDate(dueDate),
         'is_completed': isCompleted,
+        'category_id': categoryId,
+        'tags': tagIds,
       }),
     );
 
@@ -74,7 +77,7 @@ class TaskService {
     throw Exception('Erro ao cadastrar tarefa: ${response.statusCode}');
   }
 
-  // Atualizar tarefa
+  // Atualizar uma tarefa
   Future<Task> updateTask(Task task) async {
     final response = await http.put(
       Uri.parse('$_tasksUrl/${task.id}'),
@@ -90,7 +93,7 @@ class TaskService {
     throw Exception('Erro ao atualizar tarefa: ${response.statusCode}');
   }
 
-  // Excluir tarefa
+  // Excluir uma tarefa
   Future<void> deleteTask(int id) async {
     final response = await http.delete(
       Uri.parse('$_tasksUrl/$id'),
@@ -102,6 +105,7 @@ class TaskService {
     }
   }
 
+  // Formatar a data para o Laravel
   String? _formatDate(DateTime? date) {
     if (date == null) return null;
 

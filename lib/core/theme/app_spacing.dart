@@ -6,4 +6,7 @@ class AppSpacing {
   static const double xl = 32.0;
   static const double xxl = 48.0;
   static const double inputRadius = 12.0;
+  static const double contentMaxWidth = 400.0;
+  static const double taskActionWidth = 90.0;
+  static const double taskActionHeight = 34.0;
 }

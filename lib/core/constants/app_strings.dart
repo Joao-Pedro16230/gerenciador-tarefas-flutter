@@ -66,6 +66,14 @@ class AppStrings {
   static const String taskDeleted = 'Tarefa excluída com sucesso!';
   static const String deleteTaskError = 'Erro ao excluir tarefa';
 
+  // Mensagens dos serviços da API
+  static const String invalidLoginData =
+      'Verifique o e-mail e a senha informados.';
+  static const String loginFailed =
+      'Não foi possível realizar o login. Código:';
+  static const String fetchTaskError = 'Erro ao buscar tarefa';
+  static const String createTaskError = 'Erro ao cadastrar tarefa';
+
   // Dashboard
   static const String dashboardGreeting = 'Olá, usuário';
   static const String dashboardSubtitle =

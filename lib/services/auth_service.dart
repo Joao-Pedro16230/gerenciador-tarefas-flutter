@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../core/constants/api_constants.dart';
+import '../core/constants/app_strings.dart';
 
 class AuthService {
   String? _token;
@@ -33,15 +34,13 @@ class AuthService {
     }
 
     if (response.statusCode == 401) {
-      throw Exception('E-mail ou senha incorretos.');
+      throw Exception(AppStrings.invalidCredentials);
     }
 
     if (response.statusCode == 422) {
-      throw Exception('Verifique o e-mail e a senha informados.');
+      throw Exception(AppStrings.invalidLoginData);
     }
 
-    throw Exception(
-      'Não foi possível realizar o login. Código: ${response.statusCode}',
-    );
+    throw Exception('${AppStrings.loginFailed} ${response.statusCode}');
   }
 }

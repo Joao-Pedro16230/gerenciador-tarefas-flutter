@@ -134,6 +134,15 @@ flutter run -d chrome
 
 A API Laravel deve estar em execução para que o aplicativo consiga autenticar o usuário e carregar as tarefas.
 
+Para executar em outro ambiente, informe a URL da API usando `--dart-define`, sem editar o código:
+
+```bash
+flutter run -d chrome --dart-define=API_BASE_URL=http://localhost:8030/api
+```
+
+Em um **celular físico**, substitua `localhost` pelo IP do computador na rede local, e certifique-se de que a API esteja acessível a partir do dispositivo. A URL é apenas o endereço do servidor, **nunca inclua tokens ou senhas nela**. Em Android Emulator, `10.0.2.2` pode ser usado para acessar o host, desde que a porta esteja exposta corretamente.
+
+
 ## Validação e formatação
 
 Os seguintes comandos foram utilizados durante o desenvolvimento:

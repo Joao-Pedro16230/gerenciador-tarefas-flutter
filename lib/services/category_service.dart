@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../core/constants/api_constants.dart';
+import '../core/constants/app_strings.dart';
 import '../models/category.dart';
 
 class CategoryService {
@@ -24,6 +25,8 @@ class CategoryService {
       return data.map((item) => Category.fromJson(item)).toList();
     }
 
-    throw Exception('Erro ao carregar categorias: ${response.statusCode}');
+    throw Exception(
+      '${AppStrings.categoriesLoadError}: ${response.statusCode}',
+    );
   }
 }

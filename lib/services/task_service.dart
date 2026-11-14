@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../core/constants/api_constants.dart';
+import '../core/constants/app_strings.dart';
 import '../models/task.dart';
 
 class TaskService {
@@ -29,7 +30,7 @@ class TaskService {
       return data.map((item) => Task.fromJson(item)).toList();
     }
 
-    throw Exception('Erro ao carregar tarefas: ${response.statusCode}');
+    throw Exception('${AppStrings.tasksLoadError}: ${response.statusCode}');
   }
 
   // Buscar uma tarefa pelo ID
@@ -44,7 +45,7 @@ class TaskService {
       return Task.fromJson(json['data']);
     }
 
-    throw Exception('Erro ao buscar tarefa: ${response.statusCode}');
+    throw Exception('${AppStrings.fetchTaskError}: ${response.statusCode}');
   }
 
   // Cadastrar uma tarefa
@@ -74,7 +75,7 @@ class TaskService {
       return Task.fromJson(json['data']);
     }
 
-    throw Exception('Erro ao cadastrar tarefa: ${response.statusCode}');
+    throw Exception('${AppStrings.createTaskError}: ${response.statusCode}');
   }
 
   // Atualizar uma tarefa
@@ -90,7 +91,7 @@ class TaskService {
       return Task.fromJson(json['data']);
     }
 
-    throw Exception('Erro ao atualizar tarefa: ${response.statusCode}');
+    throw Exception('${AppStrings.updateTaskError}: ${response.statusCode}');
   }
 
   // Excluir uma tarefa
@@ -101,7 +102,7 @@ class TaskService {
     );
 
     if (response.statusCode != 204) {
-      throw Exception('Erro ao excluir tarefa: ${response.statusCode}');
+      throw Exception('${AppStrings.deleteTaskError}: ${response.statusCode}');
     }
   }
 

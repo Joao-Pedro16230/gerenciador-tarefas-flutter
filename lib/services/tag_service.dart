@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../core/constants/api_constants.dart';
+import '../core/constants/app_strings.dart';
 import '../models/tag.dart';
 
 class TagService {
@@ -24,6 +25,6 @@ class TagService {
       return data.map((item) => Tag.fromJson(item)).toList();
     }
 
-    throw Exception('Erro ao carregar etiquetas: ${response.statusCode}');
+    throw Exception('${AppStrings.tagsLoadError}: ${response.statusCode}');
   }
 }

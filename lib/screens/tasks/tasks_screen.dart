@@ -99,8 +99,8 @@ class _TasksScreenState extends State<TasksScreen> {
     VoidCallback? onPressed,
   }) {
     return SizedBox(
-      width: 90,
-      height: 34,
+      width: AppSpacing.taskActionWidth,
+      height: AppSpacing.taskActionHeight,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
@@ -216,7 +216,9 @@ class _TasksScreenState extends State<TasksScreen> {
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 400),
+            constraints: const BoxConstraints(
+              maxWidth: AppSpacing.contentMaxWidth,
+            ),
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.lg),
               child: Column(

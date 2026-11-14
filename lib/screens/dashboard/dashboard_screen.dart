@@ -61,7 +61,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(AppSpacing.lg),
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 400),
+              constraints: const BoxConstraints(
+                maxWidth: AppSpacing.contentMaxWidth,
+              ),
               child: FutureBuilder<List<Task>>(
                 future: _tasksFuture,
                 builder: (context, snapshot) {

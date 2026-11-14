@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/constants/app_strings.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
+import '../../core/theme/app_text_styles.dart';
 import '../../core/utils/app_validators.dart';
 import '../../models/category.dart';
 import '../../models/tag.dart';
@@ -29,23 +30,19 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   int? _selectedCategoryId;
   final Set<int> _selectedTagIds = {};
-
   DateTime? _dueDate;
   bool _isSaving = false;
 
   @override
   void initState() {
     super.initState();
-
     _categoriesFuture = CategoryService(token: widget.token).getCategories();
-
     _tagsFuture = TagService(token: widget.token).getTags();
   }
 
   String _formatDate(DateTime date) {
     final day = date.day.toString().padLeft(2, '0');
     final month = date.month.toString().padLeft(2, '0');
-
     return '$day/$month/${date.year}';
   }
 
@@ -112,7 +109,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   InputDecoration _inputDecoration(String hint) {
     return InputDecoration(
       hintText: hint,
-      hintStyle: const TextStyle(color: AppColors.textSecondary),
+      hintStyle: AppTextStyles.taskFieldHint,
       filled: true,
       fillColor: AppColors.inputBackground,
       contentPadding: const EdgeInsets.all(AppSpacing.md),
@@ -138,7 +135,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         if (snapshot.hasError) {
           return const Text(
             AppStrings.categoriesLoadError,
-            style: TextStyle(color: Colors.red),
+            style: AppTextStyles.taskError,
           );
         }
 
@@ -176,7 +173,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         if (snapshot.hasError) {
           return const Text(
             AppStrings.tagsLoadError,
-            style: TextStyle(color: Colors.red),
+            style: AppTextStyles.taskError,
           );
         }
 
@@ -189,7 +186,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         if (tags.isEmpty) {
           return const Text(
             AppStrings.noTags,
-            style: TextStyle(color: AppColors.textSecondary),
+            style: AppTextStyles.taskPageSubtitle,
           );
         }
 
@@ -234,21 +231,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   children: [
                     const Text(
                       AppStrings.addTaskTitle,
-                      style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary,
-                      ),
+                      style: AppTextStyles.taskPageTitle,
                     ),
 
                     const SizedBox(height: AppSpacing.sm),
 
                     const Text(
                       AppStrings.addTaskSubtitle,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppColors.textSecondary,
-                      ),
+                      style: AppTextStyles.taskPageSubtitle,
                     ),
 
                     const SizedBox(height: AppSpacing.xxl),
@@ -280,11 +270,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                           _dueDate == null
                               ? AppStrings.dueDate
                               : _formatDate(_dueDate!),
-                          style: TextStyle(
-                            color: _dueDate == null
-                                ? AppColors.textSecondary
-                                : AppColors.textPrimary,
-                          ),
+                          style: _dueDate == null
+                              ? AppTextStyles.taskFieldHint
+                              : AppTextStyles.taskFieldLabel,
                         ),
                       ),
                     ),
@@ -293,7 +281,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
                     const Text(
                       AppStrings.category,
-                      style: TextStyle(color: AppColors.textPrimary),
+                      style: AppTextStyles.taskFieldLabel,
                     ),
 
                     const SizedBox(height: AppSpacing.sm),
@@ -304,7 +292,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
                     const Text(
                       AppStrings.tags,
-                      style: TextStyle(color: AppColors.textPrimary),
+                      style: AppTextStyles.taskFieldLabel,
                     ),
 
                     const SizedBox(height: AppSpacing.sm),
@@ -330,10 +318,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                             ? const CircularProgressIndicator()
                             : const Text(
                                 AppStrings.saveTask,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: AppTextStyles.buttonText,
                               ),
                       ),
                     ),

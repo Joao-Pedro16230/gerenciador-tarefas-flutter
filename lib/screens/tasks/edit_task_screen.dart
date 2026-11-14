@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/constants/app_strings.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
+import '../../core/theme/app_text_styles.dart';
 import '../../core/utils/app_validators.dart';
 import '../../models/category.dart';
 import '../../models/tag.dart';
@@ -140,7 +141,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   InputDecoration _inputDecoration(String hint) {
     return InputDecoration(
       hintText: hint,
-      hintStyle: const TextStyle(color: AppColors.textSecondary),
+      hintStyle: AppTextStyles.taskFieldHint,
       filled: true,
       fillColor: AppColors.inputBackground,
       contentPadding: const EdgeInsets.all(AppSpacing.md),
@@ -166,7 +167,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
         if (snapshot.hasError) {
           return const Text(
             AppStrings.categoriesLoadError,
-            style: TextStyle(color: Colors.red),
+            style: AppTextStyles.taskError,
           );
         }
 
@@ -204,7 +205,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
         if (snapshot.hasError) {
           return const Text(
             AppStrings.tagsLoadError,
-            style: TextStyle(color: Colors.red),
+            style: AppTextStyles.taskError,
           );
         }
 
@@ -217,7 +218,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
         if (tags.isEmpty) {
           return const Text(
             AppStrings.noTags,
-            style: TextStyle(color: AppColors.textSecondary),
+            style: AppTextStyles.taskPageSubtitle,
           );
         }
 
@@ -262,28 +263,21 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                   children: [
                     const Text(
                       AppStrings.editTaskTitle,
-                      style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary,
-                      ),
+                      style: AppTextStyles.taskPageTitle,
                     ),
 
                     const SizedBox(height: AppSpacing.sm),
 
                     const Text(
                       AppStrings.editTaskSubtitle,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppColors.textSecondary,
-                      ),
+                      style: AppTextStyles.taskPageSubtitle,
                     ),
 
                     const SizedBox(height: AppSpacing.xxl),
 
                     const Text(
                       AppStrings.taskTitle,
-                      style: TextStyle(color: AppColors.textPrimary),
+                      style: AppTextStyles.taskFieldLabel,
                     ),
 
                     const SizedBox(height: AppSpacing.sm),
@@ -298,7 +292,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
 
                     const Text(
                       AppStrings.taskDescription,
-                      style: TextStyle(color: AppColors.textPrimary),
+                      style: AppTextStyles.taskFieldLabel,
                     ),
 
                     const SizedBox(height: AppSpacing.sm),
@@ -313,7 +307,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
 
                     const Text(
                       AppStrings.dueDate,
-                      style: TextStyle(color: AppColors.textPrimary),
+                      style: AppTextStyles.taskFieldLabel,
                     ),
 
                     const SizedBox(height: AppSpacing.sm),
@@ -329,11 +323,9 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                           _dueDate == null
                               ? AppStrings.selectDate
                               : _formatDate(_dueDate!),
-                          style: TextStyle(
-                            color: _dueDate == null
-                                ? AppColors.textSecondary
-                                : AppColors.textPrimary,
-                          ),
+                          style: _dueDate == null
+                              ? AppTextStyles.taskFieldHint
+                              : AppTextStyles.taskFieldLabel,
                         ),
                       ),
                     ),
@@ -342,7 +334,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
 
                     const Text(
                       AppStrings.category,
-                      style: TextStyle(color: AppColors.textPrimary),
+                      style: AppTextStyles.taskFieldLabel,
                     ),
 
                     const SizedBox(height: AppSpacing.sm),
@@ -353,7 +345,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
 
                     const Text(
                       AppStrings.tags,
-                      style: TextStyle(color: AppColors.textPrimary),
+                      style: AppTextStyles.taskFieldLabel,
                     ),
 
                     const SizedBox(height: AppSpacing.sm),
@@ -366,7 +358,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                       contentPadding: EdgeInsets.zero,
                       title: const Text(
                         AppStrings.completedTask,
-                        style: TextStyle(color: AppColors.textPrimary),
+                        style: AppTextStyles.taskFieldLabel,
                       ),
                       activeThumbColor: AppColors.primary,
                       value: _isCompleted,
@@ -396,10 +388,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                             ? const CircularProgressIndicator()
                             : const Text(
                                 AppStrings.saveChanges,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: AppTextStyles.buttonText,
                               ),
                       ),
                     ),

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/app_strings.dart';
 import '../../core/routes/app_routes.dart';
+import '../../core/theme/app_text_styles.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../models/task.dart';
@@ -128,10 +129,7 @@ class _TasksScreenState extends State<TasksScreen> {
             borderRadius: BorderRadius.circular(AppSpacing.sm),
           ),
         ),
-        child: Text(
-          label,
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-        ),
+        child: Text(label, style: AppTextStyles.taskActionButton),
       ),
     );
   }
@@ -149,14 +147,7 @@ class _TasksScreenState extends State<TasksScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            task.title,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
-            ),
-          ),
+          Text(task.title, style: AppTextStyles.taskTitle),
 
           const SizedBox(height: AppSpacing.xs),
 
@@ -164,21 +155,14 @@ class _TasksScreenState extends State<TasksScreen> {
             task.description?.isNotEmpty == true
                 ? task.description!
                 : AppStrings.noDescription,
-            style: const TextStyle(
-              fontSize: 14,
-              color: AppColors.textSecondary,
-            ),
+            style: AppTextStyles.taskDescription,
           ),
 
           if (task.category != null) ...[
             const SizedBox(height: AppSpacing.md),
             Text(
               '${AppStrings.categoryPrefix}: ${task.category!.name}',
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
-              ),
+              style: AppTextStyles.taskCategory,
             ),
           ],
 
@@ -191,10 +175,7 @@ class _TasksScreenState extends State<TasksScreen> {
                 return Chip(
                   label: Text(tag.name),
                   backgroundColor: AppColors.background,
-                  labelStyle: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 12,
-                  ),
+                  labelStyle: AppTextStyles.taskChip,
                 );
               }).toList(),
             ),
@@ -207,10 +188,7 @@ class _TasksScreenState extends State<TasksScreen> {
               '${task.dueDate!.day.toString().padLeft(2, '0')}/'
               '${task.dueDate!.month.toString().padLeft(2, '0')}/'
               '${task.dueDate!.year}',
-              style: const TextStyle(
-                fontSize: 13,
-                color: AppColors.textSecondary,
-              ),
+              style: AppTextStyles.taskDate,
             ),
           ],
 
@@ -260,21 +238,14 @@ class _TasksScreenState extends State<TasksScreen> {
                 children: [
                   const Text(
                     AppStrings.tasksTitle,
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary,
-                    ),
+                    style: AppTextStyles.taskPageTitle,
                   ),
 
                   const SizedBox(height: AppSpacing.sm),
 
                   const Text(
                     AppStrings.tasksSubtitle,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: AppColors.textSecondary,
-                    ),
+                    style: AppTextStyles.taskPageSubtitle,
                   ),
 
                   const SizedBox(height: AppSpacing.xl),
@@ -334,10 +305,7 @@ class _TasksScreenState extends State<TasksScreen> {
                       ),
                       child: const Text(
                         AppStrings.addTaskButton,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: AppTextStyles.buttonText,
                       ),
                     ),
                   ),

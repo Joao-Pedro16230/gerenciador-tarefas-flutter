@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/constants/app_strings.dart';
+import '../../core/routes/app_routes.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
@@ -115,7 +117,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
 
       if (!mounted) return;
 
-      Navigator.of(context).pop(true);
+      context.goNamed(AppRoutes.tasks, extra: widget.token);
     } catch (error) {
       if (!mounted) return;
 

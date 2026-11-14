@@ -36,30 +36,15 @@ class _TasksScreenState extends State<TasksScreen> {
     });
   }
 
-  Future<void> _openAddTask() async {
-    final result = await context.pushNamed<bool>(
-      AppRoutes.addTask,
-      extra: widget.token,
-    );
-
-    if (!mounted) return;
-
-    if (result == true) {
-      _refreshTasks();
-    }
+  void _openAddTask() {
+    context.goNamed(AppRoutes.addTask, extra: widget.token);
   }
 
-  Future<void> _openEditTask(Task task) async {
-    final result = await context.pushNamed<bool>(
+  void _openEditTask(Task task) {
+    context.goNamed(
       AppRoutes.editTask,
       extra: {'token': widget.token, 'task': task},
     );
-
-    if (!mounted) return;
-
-    if (result == true) {
-      _refreshTasks();
-    }
   }
 
   Future<void> _deleteTask(Task task) async {
@@ -161,7 +146,8 @@ class _TasksScreenState extends State<TasksScreen> {
           if (task.category != null) ...[
             const SizedBox(height: AppSpacing.md),
             Text(
-              '${AppStrings.categoryPrefix}: ${task.category!.name}',
+              '${AppStrings.categoryPrefix}: '
+              '${task.category!.name}',
               style: AppTextStyles.taskCategory,
             ),
           ],

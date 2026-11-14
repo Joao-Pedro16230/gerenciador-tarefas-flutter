@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/constants/app_strings.dart';
+import '../../core/routes/app_routes.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
@@ -36,13 +38,16 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   @override
   void initState() {
     super.initState();
+
     _categoriesFuture = CategoryService(token: widget.token).getCategories();
+
     _tagsFuture = TagService(token: widget.token).getTags();
   }
 
   String _formatDate(DateTime date) {
     final day = date.day.toString().padLeft(2, '0');
     final month = date.month.toString().padLeft(2, '0');
+
     return '$day/$month/${date.year}';
   }
 
@@ -83,7 +88,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
       if (!mounted) return;
 
-      Navigator.of(context).pop(true);
+      context.goNamed(AppRoutes.tasks, extra: widget.token);
     } catch (error) {
       if (!mounted) return;
 
